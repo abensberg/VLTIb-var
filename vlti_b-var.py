@@ -289,7 +289,7 @@ def loadimap(model, wave, fname=None, pixsizerad = 1.15e-9, npix = 1200, sig = 2
     if 'gaussian' not in model:
         imap = np.load(fname)
     else:
-        if model=='gaussian faceon':
+        if model=='gaussian face-on':
             sigmax = sig * pixsizerad
             sigmay = sigmax
             # get coordinates for given pixel resolution
