@@ -18,11 +18,6 @@ from scipy import interpolate
 mpl.rcParams.update({'lines.linewidth': 2})
 mpl.rcParams['lines.markersize'] = 3
 
-imap  = np.zeros((100,100),dtype=float)
-imap[50,50] = 1
-# pixelsize_rad = 0.5 / 206264806.2471
-wave_m = 10e-6
-
 def fft(imap, pixelsize, u, v, wave):
     
     fft=np.fft.ifftshift(np.fft.fft2(np.fft.fftshift(imap)))
@@ -368,7 +363,7 @@ if model == 'custom':
 col4, col5 = st.columns(2,gap='medium')
 
 with col4:
-    dec = st.slider('Declination in deg', -70, 20, -24, 1)
+    dec = st.slider('Declination in deg', -69, 20, -24, 1)
 
 with col5:
     wave = st.select_slider(r'Wavelength in μm',[1.6,2.2,3.5,4.8,10],3.5)
