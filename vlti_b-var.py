@@ -19,7 +19,6 @@ import matplotlib as mpl
 mpl.rcParams.update({'lines.linewidth': 2})
 mpl.rcParams['lines.markersize'] = 3
 
-
 imap  = np.zeros((100,100),dtype=float)
 imap[50,50] = 1
 # pixelsize_rad = 0.5 / 206264806.2471
@@ -282,9 +281,9 @@ def name2conf(name):
 
 def loadimap(model, wave, fname=None, pixsizerad = 1.15e-9, npix = 1200, sig = 20):
     if model=='RT face-on':
-        fname = '/home/jkobus/Documents/Interferometriestudien/stdata/'+str(wave)+'_0.npy'
+        fname = __file__.rsplit('/',1)[0] +'/stdata/'+str(wave)+'_0.npy'
     if model=='RT inclined':
-        fname = '/home/jkobus/Documents/Interferometriestudien/stdata/'+str(wave)+'_45.npy'
+        fname = __file__.rsplit('/',1)[0] +'/stdata/'+str(wave)+'_45.npy'
     
     if 'gaussian' not in model:
         imap = np.load(fname)
@@ -349,9 +348,7 @@ with col2:
 if model == 'custom':
     fname = st.file_uploader("", type=['npy'],
                              help='Upload intensity map in numpy array format.')
-    while fname is None:
-        time.sleep(1)
-    
+        
 col4, col5 = st.columns(2,gap='medium')
 
 with col4:
@@ -369,7 +366,11 @@ uv_coords, BL, PA_deg, alt_deg = get_uv(dec, ha_hour, name2conf(config))
 u_m = uv_coords[:,:,0]
 v_m = uv_coords[:,:,1]
 if model == 'custom':
-    imap, pixelsize = loadimap(model, wave, fname)
+    if fname == None:
+        imap = np.zeros((100,100))
+        pixelsize = 1.15e-9
+    else:
+        imap, pixelsize = loadimap(model, wave, fname)
 else:
     imap, pixelsize = loadimap(model, wave)
 
