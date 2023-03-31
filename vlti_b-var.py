@@ -246,7 +246,10 @@ def calc_vis(imap, u_m, v_m, wave_m, pixelsize_rad):
     
     corr_flux = corr_flux.reshape(uv_shape)
     
-    vis = np.absolute(corr_flux / np.absolute(norm))
+    if norm != 0:
+        vis = np.absolute(corr_flux / np.absolute(norm))
+    else:
+        vis = np.zeros(np.shape(corr_flux))
     
     cps = []
     for cp_idx in range(4): # create baseline triangles for use_telescopes = np.array([[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]])
@@ -410,11 +413,3 @@ axs[-1].set_xlabel("u in m")
 axs[-1].set_ylabel("v in m")
 fig2.tight_layout()
 st.pyplot(fig2)
-
-
-
-
-
-
-
-
