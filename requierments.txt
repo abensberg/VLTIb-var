@@ -2,5 +2,4 @@ numpy==1.23.5
 astroplan==0.8
 astropy==5.1
 streamlit==1.20.0
-git+https://github.com/psheehan/galario.git#egg=galario
 matplotlib==3.4.2

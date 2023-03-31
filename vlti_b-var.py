@@ -6,16 +6,15 @@ Created on Wed Mar 29 10:41:05 2023
 @author: abensberg, jkobus
 """
 import numpy as np
-import time
 from astroplan import Observer
-from astropy.coordinates import AltAz, EarthLocation, SkyCoord
+from astropy.coordinates import EarthLocation, SkyCoord
 from astropy.time import Time
 import streamlit as st
-from galario.double import sampleImage
 import astropy.units as u
 import matplotlib.pyplot as plt
 import matplotlib.colors as clr
 import matplotlib as mpl
+from scipy import interpolate
 mpl.rcParams.update({'lines.linewidth': 2})
 mpl.rcParams['lines.markersize'] = 3
 
@@ -23,6 +22,17 @@ imap  = np.zeros((100,100),dtype=float)
 imap[50,50] = 1
 # pixelsize_rad = 0.5 / 206264806.2471
 wave_m = 10e-6
+
+def fft(imap, pixelsize, u, v, wave):
+    
+    fft=np.fft.ifftshift(np.fft.fft2(np.fft.fftshift(imap)))
+    freq=np.fft.fftshift(np.fft.fftfreq(imap.shape[0],pixelsize))
+    
+    uv_lambda = np.transpose([v / wave, u / wave])
+    real=interpolate.interpn((freq,freq),np.real(fft),uv_lambda)
+    imag=interpolate.interpn((freq,freq),np.imag(fft),uv_lambda)
+    
+    return real+imag*1j
 
 def get_rise_and_set_HA(declination = -24*u.deg, 
                         obs_lat = -24.63*u.deg, 
@@ -238,11 +248,14 @@ def calc_vis(imap, u_m, v_m, wave_m, pixelsize_rad):
     v_m = np.ascontiguousarray(v_m)
     imap = np.ascontiguousarray(imap)
     
-    corr_flux = sampleImage(imap, 
-                            pixelsize_rad, 
-                            u_m / wave_m, v_m / wave_m,
-                            PA = 0)
-    norm = sampleImage(imap,pixelsize_rad, np.zeros((1,)), np.zeros((1,)), PA = 0)
+    corr_flux = fft(imap, pixelsize_rad, u_m, v_m, wave_m)
+    norm = fft(imap, pixelsize_rad, np.zeros((1,)), np.zeros((1,)), wave_m)
+    
+    # corr_flux = sampleImage(imap, 
+    #                         pixelsize_rad, 
+    #                         u_m / wave_m, v_m / wave_m,
+    #                         PA = 0)
+    # norm = sampleImage(imap,pixelsize_rad, np.zeros((1,)), np.zeros((1,)), PA = 0)
     
     corr_flux = corr_flux.reshape(uv_shape)
     
@@ -332,9 +345,9 @@ def loadimap(model, wave, fname=None, pixsizerad = 1.15e-9, npix = 1200, sig = 2
 #
 
 st.write("""
-         # VLTI B-VAR
-         ### The impact of Baseline VARiations on VLTI observations
-         """)
+          # VLTI B-VAR
+          ### The impact of Baseline VARiations on VLTI observations
+          """)
          
 col1, col2, col3 = st.columns([4,4,3])
 
@@ -350,7 +363,7 @@ with col2:
         
 if model == 'custom':
     fname = st.file_uploader("", type=['npy'],
-                             help='Upload intensity map in numpy array format.')
+                              help='Upload intensity map in numpy array format.')
         
 col4, col5 = st.columns(2,gap='medium')
 
@@ -359,7 +372,7 @@ with col4:
 
 with col5:
     wave = st.select_slider(r'Wavelength in μm',[1.6,2.2,3.5,4.8,10],3.5)
-
+        
 wave_m = wave * 1e-6
 
 ha_hour_lims = get_rise_and_set_HA(dec*u.deg)
@@ -397,19 +410,26 @@ with col3:
     st.pyplot(fig)
 
 
-fig2, axs = plt.subplots(1,3, figsize=(9,3))
+fig2, axs = plt.subplots(2,2, figsize=(9,7))
 for i_bl in range(6):
-    line, = axs[0].plot(ha_hour, vis[i_bl], alpha = 0.8)
-    axs[-2].plot(ha_hour, BL[i_bl, :], "-", color = line.get_color(), alpha = 0.8)
-    axs[-1].scatter(u_m[i_bl,:], v_m[i_bl,:], color = line.get_color()) # uv coverage
-    axs[-1].scatter(-u_m[i_bl,:], -v_m[i_bl,:], color = line.get_color()) # ''
-axs[0].set_xlabel("hour angle")
-axs[0].set_ylabel("visibility")
-axs[-1].axis('equal')
-#axs[0].set_ylim(0,1)
-axs[-2].set_xlabel("hour angle")
-axs[-2].set_ylabel("baseline in m")
-axs[-1].set_xlabel("u in m")
-axs[-1].set_ylabel("v in m")
+    line, = axs[0,0].plot(ha_hour, vis[i_bl], alpha = 0.8)
+    if i_bl < 4:
+        axs[0,1].plot(ha_hour, cp[i_bl], "-", c = "k", alpha = 0.8)
+    axs[1,0].plot(ha_hour, BL[i_bl, :], "-", color = line.get_color(), alpha = 0.8)
+    axs[1,1].scatter(u_m[i_bl,:], v_m[i_bl,:], color = line.get_color()) # uv coverage
+    axs[1,1].scatter(-u_m[i_bl,:], -v_m[i_bl,:], color = line.get_color()) # ''
+axs[0,0].set_xlabel("hour angle")
+axs[0,0].set_ylabel("visibility")
+axs[1,1].axis('equal')
+ymin, ymax = axs[0,1].get_ylim()
+if abs(ymin) < 1 or abs(ymax) < 1:
+    axs[0,1].set_ylim(-1,1)
+axs[0,1].set_xlabel("hour angle")
+axs[0,1].set_ylabel("closure phase in deg")
+axs[1,0].set_xlabel("hour angle")
+axs[1,0].set_ylabel("baseline in m")
+axs[1,1].set_xlabel("u in m")
+axs[1,1].set_ylabel("v in m")
+
 fig2.tight_layout()
 st.pyplot(fig2)
