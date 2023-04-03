@@ -357,8 +357,8 @@ with col2:
         ('RT face-on', 'RT inclined', 'gaussian face-on', 'gaussian inclined', 'custom'))
         
 if model == 'custom':
-    fname = st.file_uploader("", type=['npy'],
-                              help='Upload intensity map in numpy array format.')
+    fname = st.file_uploader("Upload custom intensity map", type=['npy'],
+                              help='Upload intensity map in numpy array format.', label_visibility='hidden')
         
 col4, col5 = st.columns(2,gap='medium')
 
