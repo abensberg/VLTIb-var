@@ -2,7 +2,7 @@
 ## An interactive tool to calculate and display visibility and closure phase for VLTI observations for different hour angles
 
 ## Description
-Variability is a vital feature in protoplanetary disks. However, the measured visbility and closure phase of an object can also vary when comparing observations done at different hour angles. VLTI B-VAR allows to estimate this effect using four different disk models. It is also possible to upload custom intensity maps from which closure phase and visibilities should be calculated. <br>
+Variability is a vital feature in protoplanetary disks. However, the measured visbility and closure phase of an object can also vary when comparing observations done at different hour angles due to different projected baselines. VLTI B-VAR allows to estimate this effect using four different disk models. It is also possible to upload custom intensity maps from which closure phase and visibilities should be calculated. <br>
 A detailed study of the influence of protoplanetary disk variability on the visiblities and closure phases can be found in Bensberg, Kobus & Wolf (in prep.)
 
 ## Installation
@@ -14,7 +14,7 @@ To start the app enter <br>
 into your terminal.
 
 ## Usage
-Use the slider and buttons to choose your set of parameters for the calculations. In case you want to upload your own custom model intensity map, please make sure that the dimensions of the image are equal for x- and y-axis.
+Use the slider and buttons to choose your set of parameters for the calculations. In case you want to upload your own custom model intensity map, please make sure that the uploaded file is a numpy file (.npy) containing a 2D numpy array where the dimensions of the image are equal for x- and y-axis.
 
 ## Support
 Please refer to github or 
