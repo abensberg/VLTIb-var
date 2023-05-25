@@ -18,6 +18,7 @@ from scipy import interpolate
 mpl.rcParams.update({'lines.linewidth': 2})
 mpl.rcParams['lines.markersize'] = 3
 
+@st.cache_data
 def fft(imap, pixelsize, u, v, wave):
     
     fft=np.fft.ifftshift(np.fft.fft2(np.fft.fftshift(imap)))
@@ -29,6 +30,7 @@ def fft(imap, pixelsize, u, v, wave):
     
     return real+imag*1j
 
+@st.cache_data
 def get_rise_and_set_HA(declination = -24*u.deg, 
                         obs_lat = -24.63*u.deg, 
                         obs_long = -70.4*u.deg, 
@@ -88,6 +90,7 @@ def get_rise_and_set_HA(declination = -24*u.deg,
             
     return u.Quantity(rise), u.Quantity(sett)
 
+@st.cache_data
 def get_uv(DEC_deg, HA_hour, use_telescopes, phi_deg=-24.6279483, quiet=True):
     """ Returns the (u,v) coordinates for VLTI observations.
 
@@ -234,6 +237,7 @@ def get_uv(DEC_deg, HA_hour, use_telescopes, phi_deg=-24.6279483, quiet=True):
 
     return uvw_coords[:,:,:2], BL, PA_deg, alt_deg
 
+@st.cache_data
 def calc_vis(imap, u_m, v_m, wave_m, pixelsize_rad):
     uv_shape = u_m.shape
     u_m = u_m.flatten()
