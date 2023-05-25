@@ -18,7 +18,6 @@ from scipy import interpolate
 mpl.rcParams.update({'lines.linewidth': 2})
 mpl.rcParams['lines.markersize'] = 3
 
-@st.cache_data
 def fft(imap, pixelsize, u, v, wave):
     
     fft=np.fft.ifftshift(np.fft.fft2(np.fft.fftshift(imap)))
@@ -237,7 +236,6 @@ def get_uv(DEC_deg, HA_hour, use_telescopes, phi_deg=-24.6279483, quiet=True):
 
     return uvw_coords[:,:,:2], BL, PA_deg, alt_deg
 
-@st.cache_data
 def calc_vis(imap, u_m, v_m, wave_m, pixelsize_rad):
     uv_shape = u_m.shape
     u_m = u_m.flatten()
@@ -294,6 +292,7 @@ def name2conf(name):
             "extended":[[4,11],[4,26],[4,30],[11,26],[11,30],[26,30]]}
     return conf[name]
 
+@st.cache_data
 def loadimap(model, wave, fname=None, pixsizerad = 1.15e-9, npix = 1200, sig = 20):
     if model=='RT face-on':
         fname = __file__.rsplit('/',1)[0] +'/stdata/'+str(wave)+'_0.npy'
