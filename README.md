@@ -3,7 +3,7 @@
 
 ## Description
 Variability is a vital feature in protoplanetary disks. However, the measured visbility and closure phase of an object can also vary when comparing observations done at different hour angles due to different projected baselines. VLTI B-VAR allows to estimate this effect using four different disk models. It is also possible to upload custom intensity maps from which closure phase and visibilities should be calculated. <br>
-A detailed study of the influence of protoplanetary disk variability on the visiblities and closure phases can be found in Bensberg, Kobus & Wolf (in prep.)
+A detailed study of the influence of protoplanetary disk variability on the visiblities and closure phases can be found in [Bensberg,Kobus & Wolf 2023](https://ui.adsabs.harvard.edu/abs/2023A%26A...677A.126B/abstract).
 
 ## Installation
 VLTI B-VAR is ment to be run as Streamlit-App in a browser. In case you want to use it on your local machine, clone the github-repository and run <br>
@@ -21,4 +21,4 @@ Please refer to github or
 <abensberg@astrophysik.uni-kiel.de>.
 
 ## Authors and acknowledgment
-If you use results from VLTI B-VAR, please cite Bensberg, Kobus & Wolf (in prep.) as well as the website.
+If you use results from VLTI B-VAR, please cite [Bensberg,Kobus & Wolf 2023](https://ui.adsabs.harvard.edu/abs/2023A%26A...677A.126B/abstract) as well as the website.
