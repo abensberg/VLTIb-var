@@ -348,9 +348,9 @@ st.write("""
           ### The impact of Baseline VARiations on VLTI observations
           """)
 
-st.write("""
+st.markdown("""
             Variability is a vital feature in protoplanetary disks. However, the measured visbility and closure phase of an object can also vary when comparing observations done at different hour angles due to different projected baselines. VLTI B-VAR allows to estimate this effect using four different disk models. It is also possible to upload custom intensity maps from which closure phase and visibilities should be calculated.
-            A detailed study of the influence of protoplanetary disk variability on the visiblities and closure phases can be found in Bensberg, Kobus & Wolf (in prep.)
+            A detailed study of the influence of protoplanetary disk variability on the visiblities and closure phases can be found in [Bensberg,Kobus & Wolf 2023](https://ui.adsabs.harvard.edu/abs/2023A%26A...677A.126B/abstract).
         """)
 
 st.write("""
